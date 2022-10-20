@@ -10,7 +10,6 @@ import org.springframework.security.config.annotation.web.configuration.WebSecur
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
 import ru.sladkkov.jwtauthentification.security.UserDetailsServiceImpl;
 import ru.sladkkov.jwtauthentification.security.jwt.JwtTokenConfigurer;
 import ru.sladkkov.jwtauthentification.security.jwt.JwtTokenProvider;
@@ -67,21 +66,4 @@ public class WebSecurityConfig extends WebSecurityConfigurerAdapter {
                 .apply(new JwtTokenConfigurer(jwtTokenProvider));
     }
 
-
-    @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
-        http
-                .httpBasic().disable()
-                .csrf().disable()
-                .sessionManagement().sessionCreationPolicy(SessionCreationPolicy.STATELESS)
-                .and()
-                .authorizeRequests()
-                .antMatchers("api/v1/login").permitAll()
-                .antMatchers("api/v1/register").permitAll()
-                .antMatchers("api/v1/admin/**").hasRole("ADMIN")
-                .antMatchers("api/v1/user/**").hasRole("USER")
-                .and()
-                .apply(new JwtTokenConfigurer(jwtTokenProvider));
-        return http.build();
-    }
 }
