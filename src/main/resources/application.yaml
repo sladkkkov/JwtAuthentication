@@ -15,8 +15,8 @@ spring:
       hibernate:
         ddl-auto: validate
         dialect: org.hibernate.dialect.PostgreSQLDialect
+    open-in-view: true
 jwt:
   token:
-    secret: $2a$12$rkmUbHVPmEp0FUs8EsNBQeQq72wcijeeLN5eVqrl77OKwXya0X2VW
     expired: 10000
 

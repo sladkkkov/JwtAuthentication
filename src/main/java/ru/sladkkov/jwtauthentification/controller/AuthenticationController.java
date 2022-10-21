@@ -10,8 +10,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.sladkkov.jwtauthentification.model.User;
-import ru.sladkkov.jwtauthentification.request.LoginRequest;
-import ru.sladkkov.jwtauthentification.response.JwtResponse;
+import ru.sladkkov.jwtauthentification.dto.request.LoginRequest;
+import ru.sladkkov.jwtauthentification.dto.response.JwtResponse;
 import ru.sladkkov.jwtauthentification.security.jwt.JwtTokenProvider;
 import ru.sladkkov.jwtauthentification.service.UserService;
 

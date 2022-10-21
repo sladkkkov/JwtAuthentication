@@ -1,7 +1,6 @@
-package ru.sladkkov.jwtauthentification.request;
+package ru.sladkkov.jwtauthentification.dto.response;
 
 import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.Setter;
 import ru.sladkkov.jwtauthentification.model.Role;
@@ -9,11 +8,11 @@ import ru.sladkkov.jwtauthentification.model.Role;
 import java.util.List;
 
 @AllArgsConstructor
-@Builder
 @Getter
 @Setter
-public class SignUpRequest {
+public class JwtResponse {
+    private Long id;
+    private String token;
     private String username;
-    private String password;
     private List<Role> roles;
 }

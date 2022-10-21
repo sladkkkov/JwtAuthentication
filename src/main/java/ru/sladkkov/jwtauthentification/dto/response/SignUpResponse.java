@@ -1,4 +1,4 @@
-package ru.sladkkov.jwtauthentification.response;
+package ru.sladkkov.jwtauthentification.dto.response;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

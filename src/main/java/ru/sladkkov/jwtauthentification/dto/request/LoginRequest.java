@@ -1,4 +1,4 @@
-package ru.sladkkov.jwtauthentification.request;
+package ru.sladkkov.jwtauthentification.dto.request;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;
