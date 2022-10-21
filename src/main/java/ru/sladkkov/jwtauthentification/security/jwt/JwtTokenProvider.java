@@ -4,6 +4,7 @@ import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.Jws;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
+import io.jsonwebtoken.security.Keys;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
@@ -14,18 +15,16 @@ import ru.sladkkov.jwtauthentification.exception.JwtAuthenticationException;
 import ru.sladkkov.jwtauthentification.model.Role;
 import ru.sladkkov.jwtauthentification.security.UserDetailsServiceImpl;
 
-import javax.annotation.PostConstruct;
+import javax.crypto.SecretKey;
 import javax.servlet.http.HttpServletRequest;
 import java.time.Instant;
-import java.util.Base64;
 import java.util.Date;
 import java.util.List;
 
 @Component
 public class JwtTokenProvider {
     private final UserDetailsServiceImpl userDetailsService;
-    @Value("${jwt.token.secret}")
-    private String jwtSecret;
+    private final SecretKey jwtSecret = Keys.secretKeyFor(SignatureAlgorithm.HS512);
     @Value("${jwt.token.expired}")
     private String jwtExpirationMs;
 
@@ -34,17 +33,13 @@ public class JwtTokenProvider {
         this.userDetailsService = userDetailsService;
     }
 
-    @PostConstruct
-    protected void init() {
-        jwtSecret = Base64.getEncoder().encodeToString(jwtSecret.getBytes());
-    }
-
     public String createJwtToken(String username, List<Role> roles) {
+
         return Jwts.builder()
                 .setClaims(getClaims(username, roles))
                 .setIssuedAt(Date.from(Instant.now()))
                 .setExpiration(Date.from(Instant.now().plusMillis(Long.parseLong(jwtExpirationMs))))
-                .signWith(SignatureAlgorithm.HS256, jwtSecret)
+                .signWith(jwtSecret, SignatureAlgorithm.HS256)
                 .compact();
     }
 
