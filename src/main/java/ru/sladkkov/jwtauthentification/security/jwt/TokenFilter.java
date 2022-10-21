@@ -14,21 +14,21 @@ import javax.servlet.http.HttpServletRequest;
 import java.io.IOException;
 
 @Component
-public class JwtTokenFilter extends GenericFilterBean {
-    private final JwtTokenProvider jwtTokenProvider;
+public class TokenFilter extends GenericFilterBean {
+    private final TokenProvider tokenProvider;
 
     @Autowired
-    public JwtTokenFilter(JwtTokenProvider jwtTokenProvider) {
-        this.jwtTokenProvider = jwtTokenProvider;
+    public TokenFilter(TokenProvider tokenProvider) {
+        this.tokenProvider = tokenProvider;
     }
 
     @Override
     public void doFilter(ServletRequest servletRequest, ServletResponse servletResponse, FilterChain filterChain) throws IOException, ServletException {
 
-        String token = jwtTokenProvider.resolveToken((HttpServletRequest) servletRequest);
-        if (token != null && jwtTokenProvider.validateToken(token)) {
-            Authentication authentication = jwtTokenProvider.getAuthentication(token);
+        String token = tokenProvider.getTokenFromHeader((HttpServletRequest) servletRequest);
 
+        if (token != null && tokenProvider.validateToken(token)) {
+            Authentication authentication = tokenProvider.getAuthentication(token);
             if (authentication != null) {
                 SecurityContextHolder.getContext().setAuthentication(authentication);
             }

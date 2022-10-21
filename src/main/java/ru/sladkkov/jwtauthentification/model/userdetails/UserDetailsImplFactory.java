@@ -1,6 +1,7 @@
-package ru.sladkkov.jwtauthentification.model;
+package ru.sladkkov.jwtauthentification.model.userdetails;
 
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
+import ru.sladkkov.jwtauthentification.model.User;
 
 import java.util.List;
 
@@ -10,7 +11,6 @@ public final class UserDetailsImplFactory {
     }
 
     public static UserDetailsImpl build(User user) {
-
         return new UserDetailsImpl(
                 user.getId(),
                 user.getUsername(),

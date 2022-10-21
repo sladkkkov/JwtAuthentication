@@ -1,4 +1,4 @@
-package ru.sladkkov.jwtauthentification.model;
+package ru.sladkkov.jwtauthentification.model.userdetails;
 
 import com.fasterxml.jackson.annotation.JsonIgnore;
 import lombok.AllArgsConstructor;

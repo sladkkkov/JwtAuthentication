@@ -13,8 +13,7 @@ import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
 import ru.sladkkov.jwtauthentification.security.UserDetailsServiceImpl;
-import ru.sladkkov.jwtauthentification.security.jwt.JwtTokenConfigurer;
-import ru.sladkkov.jwtauthentification.security.jwt.JwtTokenProvider;
+import ru.sladkkov.jwtauthentification.security.jwt.ConfigurerFilter;
 
 @EnableWebSecurity
 @EnableGlobalMethodSecurity(prePostEnabled = true, securedEnabled = true, jsr250Enabled = true)
@@ -22,19 +21,19 @@ public class SecurityConfig {
 
     private final UserDetailsServiceImpl userDetailsService;
 
-    private final JwtTokenProvider jwtTokenProvider;
+
+    private final ConfigurerFilter configurerFilter;
 
 
     @Autowired
-    public SecurityConfig(UserDetailsServiceImpl userDetailsService, JwtTokenProvider jwtTokenProvider) {
+    public SecurityConfig(UserDetailsServiceImpl userDetailsService, ConfigurerFilter configurerFilter) {
         this.userDetailsService = userDetailsService;
-        this.jwtTokenProvider = jwtTokenProvider;
+        this.configurerFilter = configurerFilter;
     }
 
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-
         authProvider.setUserDetailsService(userDetailsService);
         authProvider.setPasswordEncoder(bCryptPasswordEncoder());
 
@@ -42,16 +41,15 @@ public class SecurityConfig {
     }
 
     @Bean
-    public AuthenticationManager authenticationManager(
-            AuthenticationConfiguration authConfig) throws Exception {
-        return authConfig.getAuthenticationManager();
-    }
-
-    @Bean
     public PasswordEncoder bCryptPasswordEncoder() {
         return new BCryptPasswordEncoder();
     }
 
+    @Bean
+    public AuthenticationManager authenticationManager(
+            AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -66,7 +64,8 @@ public class SecurityConfig {
                 .antMatchers("api/v1/admin/**").hasRole("ADMIN")
                 .antMatchers("api/v1/user/**").hasRole("USER")
                 .and()
-                .apply(new JwtTokenConfigurer(jwtTokenProvider));
+                .apply(configurerFilter);
+
         return http.build();
     }
 
