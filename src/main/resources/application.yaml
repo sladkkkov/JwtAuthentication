@@ -1,4 +1,8 @@
 spring:
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.yaml
+    default-schema: public
   datasource:
     url: "jdbc:postgresql://localhost/postgres"
     username: postgres
@@ -9,7 +13,7 @@ spring:
     generate-ddl: false
     properties:
       hibernate:
-        ddl-auto: update
+        ddl-auto: validate
         dialect: org.hibernate.dialect.PostgreSQLDialect
 jwt:
   token:

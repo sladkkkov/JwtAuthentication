@@ -13,7 +13,6 @@ import java.util.List;
         uniqueConstraints = {
                 @UniqueConstraint(columnNames = "username")
         })
-
 public class User {
 
     @Id
