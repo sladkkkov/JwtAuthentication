@@ -53,10 +53,6 @@ public class SecurityConfig {
         return new BCryptPasswordEncoder();
     }
 
-    @Bean
-    public JwtTokenProvider authTokenFilter() {
-        return new JwtTokenProvider(userDetailsService);
-    }
 
     @Bean
     protected SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
