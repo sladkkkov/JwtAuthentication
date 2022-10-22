@@ -1,13 +1,14 @@
 package ru.sladkkov.jwtauthentification.model;
 
-import lombok.Getter;
-import lombok.Setter;
+import lombok.*;
 
 import javax.persistence.*;
 import java.util.List;
 
 @Getter
 @Setter
+@RequiredArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "users",
         uniqueConstraints = {
@@ -31,6 +32,11 @@ public class User {
     @JoinTable(name = "user_roles",
             joinColumns = @JoinColumn(name = "user_id"),
             inverseJoinColumns = @JoinColumn(name = "role_id"))
+    @ToString.Exclude
     private List<Role> roles;
 
+
+    public User(String username, String password, String firstName, String lastName) {
+
+    }
 }
