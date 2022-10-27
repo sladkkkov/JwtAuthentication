@@ -1,6 +1,6 @@
 package ru.sladkkov.jwtauthentification.service;
 
-import org.springframework.beans.factory.annotation.Autowired;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -14,6 +14,7 @@ import javax.management.relation.RoleNotFoundException;
 import java.util.List;
 
 @Service
+@Slf4j
 public class RegistrationService {
 
     private final UserRepository userRepository;
@@ -34,8 +35,10 @@ public class RegistrationService {
     }
 
     public void registration(RegisterRequest registerRequest) throws RoleNotFoundException {
+        log.info("User with username: " + registerRequest.getUsername() + " start registration");
         User user = new User(registerRequest.getUsername(), encodePassword(registerRequest), registerRequest.getFirstName(), registerRequest.getLastName());
         userRepository.save(user);
+        log.info("User: " + registerRequest.getUsername() + " successfully created");
         setUserRole(user);
     }
 
@@ -47,5 +50,6 @@ public class RegistrationService {
         user.setRoles(List.of(roleRepository
                 .findByName(RoleEnum.USER)
                 .orElseThrow(() -> new RoleNotFoundException("Такой роли не существует"))));
+        log.info("Successfully set role to User");
     }
 }

@@ -13,8 +13,12 @@ import java.util.List;
 @Setter
 @Builder
 public class JwtResponse {
+
     private Long id;
+
     private String token;
+
     private String username;
+
     private List<Role> roles;
 }

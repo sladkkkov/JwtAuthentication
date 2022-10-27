@@ -1,5 +1,6 @@
 package ru.sladkkov.jwtauthentification.dto.request;
 
+import com.fasterxml.jackson.annotation.JsonProperty;
 import lombok.Builder;
 import lombok.Data;
 
@@ -10,8 +11,10 @@ public class RegisterRequest {
 
     private String password;
 
+    @JsonProperty("first_name")
     private String firstName;
 
+    @JsonProperty("last_name")
     private String lastName;
 
 }
