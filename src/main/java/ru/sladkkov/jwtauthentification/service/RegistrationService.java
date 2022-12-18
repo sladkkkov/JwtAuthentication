@@ -1,10 +1,10 @@
 package ru.sladkkov.jwtauthentification.service;
 
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.context.annotation.Bean;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 import ru.sladkkov.jwtauthentification.dto.request.RegisterRequest;
+import ru.sladkkov.jwtauthentification.exception.UserAlreadyCreatedException;
 import ru.sladkkov.jwtauthentification.model.RoleEnum;
 import ru.sladkkov.jwtauthentification.model.User;
 import ru.sladkkov.jwtauthentification.repository.RoleRepository;
@@ -29,17 +29,19 @@ public class RegistrationService {
         this.bCryptPasswordEncoder = bCryptPasswordEncoder;
     }
 
-    @Bean
-    public BCryptPasswordEncoder bCryptPasswordEncoder() {
-        return new BCryptPasswordEncoder();
-    }
-
     public void registration(RegisterRequest registerRequest) throws RoleNotFoundException {
         log.info("User with username: " + registerRequest.getUsername() + " start registration");
         User user = new User(registerRequest.getUsername(), encodePassword(registerRequest), registerRequest.getFirstName(), registerRequest.getLastName());
-        userRepository.save(user);
-        log.info("User: " + registerRequest.getUsername() + " successfully created");
-        setUserRole(user);
+
+        if (userRepository.findByUsername(registerRequest.getUsername()).isEmpty()) {
+            setUserRole(user);
+            userRepository.save(user);
+            log.info("User: " + registerRequest.getUsername() + " successfully created");
+
+        } else {
+            log.error("User: " + registerRequest.getUsername() + " is already created");
+            throw new UserAlreadyCreatedException("Пользователь с таким логином: " + registerRequest.getUsername() + " уже существует");
+        }
     }
 
     private String encodePassword(RegisterRequest registerRequest) {
@@ -47,9 +49,7 @@ public class RegistrationService {
     }
 
     private void setUserRole(User user) throws RoleNotFoundException {
-        user.setRoles(List.of(roleRepository
-                .findByName(RoleEnum.USER)
-                .orElseThrow(() -> new RoleNotFoundException("Такой роли не существует"))));
+        user.setRoles(List.of(roleRepository.findByName(RoleEnum.USER).orElseThrow(() -> new RoleNotFoundException("Такой роли не существует"))));
         log.info("Successfully set role to User");
     }
 }
